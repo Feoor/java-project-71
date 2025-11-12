@@ -40,7 +40,7 @@ public class App implements Runnable {
     }
 
     public static void main(String[] args) {
-        int exitCode = new CommandLine(new App()).execute("src/test/resources/fixtures/file1.json", "src/test/resources/fixtures/file3.json");
+        int exitCode = new CommandLine(new App()).execute(args);
         System.exit(exitCode);
     }
 
