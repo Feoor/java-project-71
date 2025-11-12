@@ -1,6 +1,6 @@
 {
   "host": "hexlet.io",
-  "verbose": "true",
+  "verbose": true,
   "timeout": 50,
   "proxy": "987.654.321.098"
 }
