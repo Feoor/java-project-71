@@ -33,14 +33,15 @@ class DifferTest {
                 "}";
         assertEquals(excepted, actual);
 
-        actual = Differ.diff(data2, data3);
-        excepted = "{\n" +
-                "    host: hexlet.io\n" +
-                "  - proxy: 987.654.321.098\n" +
-                "  - timeout: 50\n" +
-                "  + timeout: 20\n" +
-                "    verbose: true\n" +
-                "}";
+        actual = Differ.generate(data2, data3);
+        excepted = """
+                {
+                    host: hexlet.io
+                  - timeout: 20
+                  + timeout: 50
+                    verbose: true
+                  + proxy: 987.654.321.098
+                }""";
         assertEquals(excepted, actual);
     }
 
