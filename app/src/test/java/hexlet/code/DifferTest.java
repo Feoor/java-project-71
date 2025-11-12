@@ -14,23 +14,24 @@ class DifferTest {
     private static Map<String, Object> data3;
 
     @BeforeAll
-    static void setUp() throws Exception {
+    static void setUp() {
         data1 = App.getJsonData("src/test/resources/fixtures/file1.json");
         data2 = App.getJsonData("src/test/resources/fixtures/file2.json");
         data3 = App.getJsonData("src/test/resources/fixtures/file3.json");
     }
 
     @Test
-    void testDiff() throws Exception {
-        String actual = Differ.diff(data1, data2);
-        String excepted = "{\n" +
-                "  - follow: false\n" +
-                "    host: hexlet.io\n" +
-                "  - proxy: 123.234.53.22\n" +
-                "  - timeout: 50\n" +
-                "  + timeout: 20\n" +
-                "  + verbose: true\n" +
-                "}";
+    void testGenerate() {
+        String actual = Differ.generate(data1, data2);
+        String excepted = """
+                {
+                  - follow: false
+                    host: hexlet.io
+                  - proxy: 123.234.53.22
+                  - timeout: 50
+                  + timeout: 20
+                  + verbose: true
+                }""";
         assertEquals(excepted, actual);
 
         actual = Differ.generate(data2, data3);
@@ -46,9 +47,9 @@ class DifferTest {
     }
 
     @Test
-    void testEmptyDiff() {
+    void testEmptyGenerate() {
         try {
-            String actual = Differ.diff(null, null);
+            String actual = Differ.generate(null, null);
             String excepted = "";
             assertEquals(excepted, actual);
         } catch (Exception e) {
@@ -57,14 +58,24 @@ class DifferTest {
     }
 
     @Test
-    void testDiffWithOneEmpty() throws Exception {
-        String actual = Differ.diff(data1, null);
-        String excepted = "{\n" +
-                "  - follow: false\n" +
-                "  - host: hexlet.io\n" +
-                "  - proxy: 123.234.53.22\n" +
-                "  - timeout: 50\n" +
-                "}";
+    void testGenerateWithOneEmpty() {
+        String actual = Differ.generate(data1, null);
+        String excepted = """
+                {
+                  - follow: false
+                  - host: hexlet.io
+                  - proxy: 123.234.53.22
+                  - timeout: 50
+                }""";
         assertEquals(excepted, actual);
+
+        String actual2 = Differ.generate(null, data2);
+        String excepted2 = """
+                {
+                  + host: hexlet.io
+                  + timeout: 20
+                  + verbose: true
+                }""";
+        assertEquals(excepted2, actual2);
     }
 }
