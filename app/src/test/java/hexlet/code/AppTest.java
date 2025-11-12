@@ -1,7 +1,10 @@
 package hexlet.code;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.util.Map;
 import java.util.TreeMap;
@@ -51,12 +54,13 @@ class AppTest {
         String filePath = "src/test/resources/fixtures/nonexistent.json";
 
         // Assert
-        Exception exception = assertThrows(Exception.class, () -> {
+        Exception exception = assertThrows(RuntimeException.class, () -> {
             // Act
             App.getJsonData(filePath);
         });
 
-        assertTrue(exception.getMessage().contains("No such file or directory"), "Should throw an exception if the file does not exist");
+        assertTrue(exception.getMessage().contains("File not found:"),
+                "Should throw an exception if the file does not exist");
     }
 
     @Test
@@ -65,12 +69,12 @@ class AppTest {
         String filePath = "src/test/resources/fixtures/invalidJsonFormat.json"; // Assume this file has invalid JSON content
 
         // Assert
-        Exception exception = assertThrows(Exception.class, () -> {
+        Exception exception = assertThrows(RuntimeException.class, () -> {
             // Act
             App.getJsonData(filePath);
         });
 
-        assertTrue(exception.getMessage().contains("Unrecognized token"),
+        assertTrue(exception.getMessage().contains("Invalid JSON format in file:"),
                 "Should throw an exception if the JSON content is invalid");
     }
 }

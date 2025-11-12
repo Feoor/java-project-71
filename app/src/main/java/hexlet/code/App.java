@@ -1,5 +1,6 @@
 package hexlet.code;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import picocli.CommandLine;
@@ -7,6 +8,8 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
+import java.io.IOException;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Files;
 import java.util.Map;
@@ -29,9 +32,10 @@ public class App implements Runnable {
         try {
             Map<String, Object> data1 = getJsonData(file1);
             Map<String, Object> data2 = getJsonData(file2);
-            System.out.println("Done");
+            String diff = Differ.generate(data1, data2);
+            System.out.println(diff);
         } catch (Exception e) {
-            System.err.println("Error: " + e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 
@@ -44,15 +48,33 @@ public class App implements Runnable {
         return Path.of(filePath).toAbsolutePath().normalize();
     }
 
-    public static String readFile(Path path) throws Exception {
+    public static String readFile(Path path) throws IOException {
         return Files.readString(path);
     }
 
-    public static Map<String, Object> getJsonData(String filePath) throws Exception {
+    public static Map<String, Object> getJsonData(String filePath) {
         Path path = getPath(filePath);
-        String fileContent = readFile(path);
+
+        String fileContent;
+        try {
+            fileContent = readFile(path);
+        } catch (NoSuchFileException e) {
+            throw new RuntimeException("File not found: " + filePath);
+        } catch (IOException e) {
+            throw new RuntimeException("Error reading file: " + filePath);
+        }
+
         ObjectMapper objectMapper = new ObjectMapper();
-        Map<String, Object> unsortedJsonMap = objectMapper.readValue(fileContent, new TypeReference<Map<String, Object>>() {});
+
+        Map<String, Object> unsortedJsonMap;
+        try {
+            unsortedJsonMap = objectMapper.readValue(fileContent, new TypeReference<>() {});
+        } catch (JsonParseException e) {
+            throw new RuntimeException("Invalid JSON format in file: " + filePath);
+        } catch (IOException e) {
+            throw new RuntimeException("Error reading file: " + filePath);
+        }
+
         return new TreeMap<>(unsortedJsonMap);
     }
 }
