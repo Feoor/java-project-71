@@ -1,5 +1,6 @@
 plugins {
     application
+    id("checkstyle")
     id("com.github.ben-manes.versions") version "0.53.0"
 }
 
@@ -10,11 +11,19 @@ application {
     mainClass.set("hexlet.code.App")
 }
 
+checkstyle {
+    toolVersion = "12.1.1"
+    configFile = file("config/checkstyle/google_checks.xml")
+}
+
 repositories {
     mavenCentral()
 }
 
 dependencies {
+    // checkstyle
+    implementation("com.puppycrawl.tools:checkstyle:12.1.1")
+
     implementation("info.picocli:picocli:4.7.7")
 
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
@@ -31,4 +40,11 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+}
+
+tasks.withType(Checkstyle::class) {
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+    }
 }
