@@ -38,8 +38,7 @@ public class Differ {
     // Bypass of keys that are not in the first comparison object
     data2.keySet().stream()
             .filter(key -> !data1.containsKey(key))
-            .forEach(key ->
-                    result.append("  + ").append(key).append(": ").append(data2.get(key)).append("\n"));
+            .forEach(key -> result.append("  + ").append(key).append(": ").append(data2.get(key)).append("\n"));
 
     return result.append("}").toString();
   }
