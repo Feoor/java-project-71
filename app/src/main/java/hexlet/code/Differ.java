@@ -1,9 +1,15 @@
 package hexlet.code;
 
+import org.apache.commons.lang3.builder.Diff;
+
 import java.util.Map;
 import java.util.Objects;
 
 public class Differ {
+
+  private Differ() {
+    throw new IllegalStateException("Utility class");
+  }
 
   public static String generate(Map<String, Object> map1, Map<String, Object> map2) {
     if (map1 == null && map2 == null) {
@@ -34,9 +40,8 @@ public class Differ {
     // Bypass of keys that are not in the first comparison object
     data2.keySet().stream()
             .filter(key -> !data1.containsKey(key))
-            .forEach((key) -> {
-              result.append("  + ").append(key).append(": ").append(data2.get(key)).append("\n");
-            });
+            .forEach(key ->
+                    result.append("  + ").append(key).append(": ").append(data2.get(key)).append("\n"));
 
     return result.append("}").toString();
   }

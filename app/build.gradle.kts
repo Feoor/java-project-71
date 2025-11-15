@@ -1,3 +1,9 @@
+val checkstyleVersion = "12.1.1"
+val picocliVersion = "4.7.7"
+val jacksonDatabindVersion = "2.18.2"
+val lombokVersion = "1.18.42"
+val junitBomVersion = "5.10.0"
+
 plugins {
     application
     id("checkstyle")
@@ -13,7 +19,7 @@ application {
 }
 
 checkstyle {
-    toolVersion = "12.1.1"
+    toolVersion = checkstyleVersion
     configFile = file("config/checkstyle/google_checks.xml")
     maxWarnings = 0
 }
@@ -31,18 +37,18 @@ repositories {
 
 dependencies {
     // checkstyle
-    implementation("com.puppycrawl.tools:checkstyle:12.1.1")
+    implementation("com.puppycrawl.tools:checkstyle:$checkstyleVersion")
 
-    implementation("info.picocli:picocli:4.7.7")
+    implementation("info.picocli:picocli:$picocliVersion")
 
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
-    implementation("com.fasterxml.jackson.core:jackson-databind:2.18.2")
+    implementation("com.fasterxml.jackson.core:jackson-databind:$jacksonDatabindVersion")
 
     // https://mvnrepository.com/artifact/org.projectlombok/lombok
-    compileOnly("org.projectlombok:lombok:1.18.42")
-    annotationProcessor("org.projectlombok:lombok:1.18.42")
+    compileOnly("org.projectlombok:lombok:$lombokVersion")
+    annotationProcessor("org.projectlombok:lombok:$lombokVersion")
 
-    testImplementation(platform("org.junit:junit-bom:5.10.0"))
+    testImplementation(platform("org.junit:junit-bom:$junitBomVersion"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
