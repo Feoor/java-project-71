@@ -1,13 +1,11 @@
 package hexlet.code;
 
-import org.apache.commons.lang3.builder.Diff;
-
 import java.util.Map;
 import java.util.Objects;
 
 public class Differ {
 
-  private Differ() {
+  public Differ() {
     throw new IllegalStateException("Utility class");
   }
 

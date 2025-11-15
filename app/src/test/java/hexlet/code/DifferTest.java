@@ -2,6 +2,8 @@ package hexlet.code;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Map;
 import org.junit.jupiter.api.BeforeAll;
@@ -18,6 +20,15 @@ class DifferTest {
     data1 = App.getJsonData("src/test/resources/fixtures/file1.json");
     data2 = App.getJsonData("src/test/resources/fixtures/file2.json");
     data3 = App.getJsonData("src/test/resources/fixtures/file3.json");
+  }
+
+  @Test
+  void testDifferClass() {
+    Exception exception = assertThrows(IllegalStateException.class, () -> {
+      Differ differ = new Differ();
+    });
+
+    assertTrue(exception.getMessage().contains("Utility class"));
   }
 
   @Test
