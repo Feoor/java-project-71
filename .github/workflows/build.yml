@@ -44,15 +44,18 @@ jobs:
         restore-keys: ${{ runner.os }}-gradle
           
     - name: Build with Gradle Wrapper
-      env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: ./gradlew build sonar --info
+      run: make build
 
     - name: Run Test 🧪
       run: make test
 
     - name: Run Checkstyle 📝
       run: make lint
+
+    - name: Analyze with SonarQube
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      run: ./gradlew sonar --info
 
   dependency-submission:
 
