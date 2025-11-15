@@ -14,6 +14,7 @@ application {
 checkstyle {
     toolVersion = "12.1.1"
     configFile = file("config/checkstyle/google_checks.xml")
+    maxWarnings = 0
 }
 
 repositories {
