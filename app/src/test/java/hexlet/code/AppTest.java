@@ -22,7 +22,7 @@ class AppTest {
   @Test
   void testGetJsonDataWithValidFile() {
     // Arrange
-    String filePath = "src/test/resources/fixtures/file1.json";
+    String filePath = "src/test/resources/fixtures/json1.json";
 
     // Act
     Map<String, Object> result = App.getJsonData(filePath);

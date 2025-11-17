@@ -11,29 +11,20 @@ import org.junit.jupiter.api.Test;
 
 class DifferTest {
 
-  private static Map<String, Object> data1;
-  private static Map<String, Object> data2;
-  private static Map<String, Object> data3;
+  private static Map<String, Object> json1;
+  private static Map<String, Object> json2;
+  private static Map<String, Object> yaml1;
 
   @BeforeAll
   static void setUp() {
-    data1 = App.getJsonData("src/test/resources/fixtures/file1.json");
-    data2 = App.getJsonData("src/test/resources/fixtures/file2.json");
-    data3 = App.getJsonData("src/test/resources/fixtures/file3.json");
-  }
-
-  @Test
-  void testDifferClass() {
-    Exception exception = assertThrows(IllegalStateException.class, () -> {
-      Differ differ = new Differ();
-    });
-
-    assertTrue(exception.getMessage().contains("Utility class"));
+    json1 = App.getJsonData("src/test/resources/fixtures/json1.json");
+    json2 = App.getJsonData("src/test/resources/fixtures/json2.json");
+    yaml1 = App.getJsonData("src/test/resources/fixtures/yaml1.yml");
   }
 
   @Test
   void testGenerate() {
-    String actual = Differ.generate(data1, data2);
+    String actual = Differ.generate(json1, json2);
     String excepted = """
                 {
                   - follow: false
@@ -45,7 +36,7 @@ class DifferTest {
                 }""";
     assertEquals(excepted, actual);
 
-    actual = Differ.generate(data2, data3);
+    actual = Differ.generate(json2, yaml1);
     excepted = """
                 {
                     host: hexlet.io
@@ -71,7 +62,7 @@ class DifferTest {
 
   @Test
   void testGenerateWithOneEmpty() {
-    String actual = Differ.generate(data1, null);
+    String actual = Differ.generate(json1, null);
     String excepted = """
                 {
                   - follow: false
@@ -81,7 +72,7 @@ class DifferTest {
                 }""";
     assertEquals(excepted, actual);
 
-    String actual2 = Differ.generate(null, data2);
+    String actual2 = Differ.generate(null, json2);
     String excepted2 = """
                 {
                   + host: hexlet.io
@@ -89,5 +80,16 @@ class DifferTest {
                   + verbose: true
                 }""";
     assertEquals(excepted2, actual2);
+  }
+
+  @Test
+  void testDifferClass() {
+    Exception exception = assertThrows(
+            IllegalStateException.class,
+            Differ::new,
+            "Expected constructor to throw IllegalStateException"
+    );
+
+    assertTrue(exception.getMessage().contains("Utility class"));
   }
 }
