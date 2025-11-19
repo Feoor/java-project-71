@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static hexlet.code.Parser.parse;
 
 import java.util.Map;
 import org.junit.jupiter.api.BeforeAll;
@@ -17,9 +18,9 @@ class DifferTest {
 
   @BeforeAll
   static void setUp() {
-    json1 = App.getJsonData("src/test/resources/fixtures/json1.json");
-    json2 = App.getJsonData("src/test/resources/fixtures/json2.json");
-    yaml1 = App.getJsonData("src/test/resources/fixtures/yaml1.yml");
+    json1 = parse("src/test/resources/fixtures/json1.json");
+    json2 = parse("src/test/resources/fixtures/json2.json");
+    yaml1 = parse("src/test/resources/fixtures/yaml1.yml");
   }
 
   @Test

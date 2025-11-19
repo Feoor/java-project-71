@@ -1,6 +1,18 @@
 package hexlet.code;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class Parser {
   public Parser() {
@@ -8,14 +20,54 @@ public class Parser {
   }
 
   public static Map<String, Object> parse(String filePath) {
-    throw new UnsupportedOperationException("Not yet implemented");
+    Path path = getPath(filePath);
+    String fileContent;
+
+    try {
+      fileContent = readFile(path);
+    } catch (NoSuchFileException e) {
+      throw new RuntimeException("File not found: " + filePath);
+    } catch (IOException e) {
+      throw new RuntimeException("Error reading file: " + filePath);
+    }
+
+    String fileExtension = getFileExtension(filePath).toLowerCase();
+    ObjectMapper mapper = getObjectMapper(fileExtension);
+    Map<String, Object> unsortedJsonMap;
+    try {
+      unsortedJsonMap = mapper.readValue(fileContent, new TypeReference<>() {});
+    } catch (JsonParseException e) {
+      throw new RuntimeException("Invalid JSON format in file: " + filePath);
+    } catch (JsonMappingException e) {
+      throw new RuntimeException("Error mapping JSON in file: " + filePath);
+    } catch (JsonProcessingException e) {
+      throw new RuntimeException("Error processing JSON in file: " + filePath);
+    }
+
+    return new TreeMap<>(unsortedJsonMap);
   }
 
-  public static Map<String, Object> parseJson(String json) {
-    throw new UnsupportedOperationException("Not yet implemented");
+  public static Path getPath(String filePath) {
+    return Path.of(filePath).toAbsolutePath().normalize();
   }
 
-  public static Map<String, Object> parseYaml(String yaml) {
-    throw new UnsupportedOperationException("Not yet implemented");
+  public static String readFile(Path path) throws IOException {
+    return Files.readString(path);
+  }
+
+  public static String getFileExtension(String filePath) {
+    return filePath.substring(filePath.lastIndexOf('.') + 1);
+  }
+
+  public static ObjectMapper getObjectMapper(String fileExtension) {
+    switch (fileExtension) {
+      case "json" -> {
+        return new JsonMapper();
+      }
+      case "yml", "yaml" -> {
+        return new YAMLMapper();
+      }
+      default -> throw new IllegalArgumentException("Unsupported file format: " + fileExtension);
+    }
   }
 }

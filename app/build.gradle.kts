@@ -1,6 +1,7 @@
 val checkstyleVersion = "12.1.1"
 val picocliVersion = "4.7.7"
 val jacksonDatabindVersion = "2.18.2"
+val jacksonYamlVersion = "2.19.0"
 val lombokVersion = "1.18.42"
 val junitBomVersion = "5.10.0"
 
@@ -44,6 +45,8 @@ dependencies {
 
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
     implementation("com.fasterxml.jackson.core:jackson-databind:$jacksonDatabindVersion")
+
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:$jacksonYamlVersion")
 
     // https://mvnrepository.com/artifact/org.projectlombok/lombok
     compileOnly("org.projectlombok:lombok:$lombokVersion")
