@@ -25,6 +25,8 @@ public class Differ {
       Object value1 = data1.get(key);
       Object value2 = data2.get(key);
 
+      // TODO: Maybe it is worth making some kind of array where the differences will be recorded,
+      //  and then sorting in alphabetical order, instead of getting a sorted TreeMap<>()
       if (!data2.containsKey(key)) {
         result.append("  - ").append(key).append(": ").append(value1).append("\n");
       } else if (!Objects.equals(value1, value2)) {

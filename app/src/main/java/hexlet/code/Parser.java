@@ -38,10 +38,8 @@ public class Parser {
       unsortedJsonMap = mapper.readValue(fileContent, new TypeReference<>() {});
     } catch (JsonParseException e) {
       throw new RuntimeException("Invalid JSON format in file: " + filePath);
-    } catch (JsonMappingException e) {
-      throw new RuntimeException("Error mapping JSON in file: " + filePath);
     } catch (JsonProcessingException e) {
-      throw new RuntimeException("Error processing JSON in file: " + filePath);
+      throw new RuntimeException("Error mapping JSON in file: " + filePath);
     }
 
     return new TreeMap<>(unsortedJsonMap);

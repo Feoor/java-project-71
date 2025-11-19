@@ -25,8 +25,9 @@ class DifferTest {
 
   @Test
   void testGenerate() {
-    String actual = Differ.generate(json1, json2);
-    String excepted = """
+    // Act & Assert
+    String actual1 = Differ.generate(json1, json2);
+    String excepted1 = """
                 {
                   - follow: false
                     host: hexlet.io
@@ -35,10 +36,12 @@ class DifferTest {
                   + timeout: 20
                   + verbose: true
                 }""";
-    assertEquals(excepted, actual);
 
-    actual = Differ.generate(json2, yaml1);
-    excepted = """
+    assertEquals(excepted1, actual1);
+
+    // Act & Assert
+    String actual2 = Differ.generate(json2, yaml1);
+    String excepted2 = """
                 {
                     host: hexlet.io
                   - timeout: 20
@@ -46,7 +49,44 @@ class DifferTest {
                     verbose: true
                   + proxy: 987.654.321.098
                 }""";
-    assertEquals(excepted, actual);
+
+    assertEquals(excepted2, actual2);
+
+    // Arrange
+    Map<String, Object> json3 = parse("src/test/resources/fixtures/json3.json");
+    Map<String, Object> yaml2 = parse("src/test/resources/fixtures/yaml2.yml");
+
+    // Act & Assert
+    String actual3 = Differ.generate(json3, yaml2);
+    String excepted3 = """
+                {
+                    chars1: [a, b, c]
+                  - chars2: [d, e, f]
+                  + chars2: false
+                  - checked: false
+                  + checked: true
+                  - default: null
+                  + default: [value1, value2]
+                  - id: 45
+                  + id: null
+                  - key1: value1
+                  + key2: value2
+                    numbers1: [1, 2, 3, 4]
+                  - numbers2: [2, 3, 4, 5]
+                  + numbers2: [22, 33, 44, 55]
+                  - numbers3: [3, 4, 5]
+                  + numbers4: [4, 5, 6]
+                  + obj1: {nestedKey=value, isNested=true}
+                  - setting1: Some value
+                  + setting1: Another value
+                  - setting2: 200
+                  + setting2: 300
+                  - setting3: true
+                  + setting3: none
+                }
+    """;
+
+    assertEquals(excepted3, actual3);
   }
 
   @Test

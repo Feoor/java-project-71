@@ -9,8 +9,8 @@ import picocli.CommandLine.Parameters;
 @Command(name = "gendiff", version = "gendiff 1.0", mixinStandardHelpOptions = true)
 public class App implements Runnable {
 
-  @Option(names = { "-f", "--format" }, description = "output format [default: stylish]")
-  String format = "stylish";
+  @Option(names = { "-f", "--format" }, defaultValue = "stylish", description = "output format [default: ${DEFAULT-VALUE}]")
+  private String format;
 
   @Parameters(index = "0", description = "path to first file")
   private String file1;
@@ -25,8 +25,13 @@ public class App implements Runnable {
       Map<String, Object> data2 = Parser.parse(file2);
       String diff = Differ.generate(data1, data2);
       System.out.println(diff);
+    } catch (RuntimeException e) {
+      System.err.println("Error: " + e.getMessage());
+      System.exit(1);
     } catch (Exception e) {
-      throw new RuntimeException(e);
+      System.err.println("Unexpected error: " + e.getMessage());
+      e.printStackTrace();
+      System.exit(2);
     }
   }
 
