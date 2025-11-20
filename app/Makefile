@@ -2,7 +2,7 @@ setup:
 	./gradlew wrapper --gradle-version 8.14
 
 run-dist:
-	./build/install/app/bin/app
+	./build/install/app/bin/app $(ARGS)
 
 run:
 	./gradlew run

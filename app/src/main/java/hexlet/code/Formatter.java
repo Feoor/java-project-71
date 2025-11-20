@@ -1,6 +1,8 @@
 package hexlet.code;
 
 import java.util.List;
+import hexlet.code.formatters.StylishFormat;
+import hexlet.code.formatters.PlainFormat;
 
 public class Formatter {
 
@@ -9,28 +11,10 @@ public class Formatter {
   }
 
   public static String format(List<DiffEntry> diff, String format) {
-    return switch (format) {
-      case "stylish" -> formatStylish(diff);
+    return switch (format.toLowerCase()) {
+      case "stylish" -> StylishFormat.format(diff);
+      case "plain" -> PlainFormat.format(diff);
       default -> throw new IllegalArgumentException("Unknown format: " + format);
     };
-  }
-
-  private static String formatStylish(List<DiffEntry> diff) {
-    StringBuilder sb = new StringBuilder("{\n");
-
-    for (DiffEntry entry : diff) {
-      switch (entry.status()) {
-        case ADDED -> sb.append("  + ").append(entry.key()).append(": ").append(entry.secondValue()).append("\n");
-        case REMOVED -> sb.append("  - ").append(entry.key()).append(": ").append(entry.firstValue()).append("\n");
-        case MODIFIED -> {
-          sb.append("  - ").append(entry.key()).append(": ").append(entry.firstValue()).append("\n");
-          sb.append("  + ").append(entry.key()).append(": ").append(entry.secondValue()).append("\n");
-        }
-        case UNCHANGED -> sb.append("    ").append(entry.key()).append(": ").append(entry.firstValue()).append("\n");
-        default -> throw new IllegalStateException("Unexpected value: " + entry.status());
-      }
-    }
-
-    return sb.append("}").toString();
   }
 }

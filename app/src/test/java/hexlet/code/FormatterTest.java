@@ -53,7 +53,7 @@ class FormatterTest {
             Property 'key1' was added with value: 'newValue'
             Property 'key2' was removed
             Property 'key3' was updated. From 'oldValue' to 'newValue'
-            Property 'key4' was updated. From '[complex value]' to '[complex value]'""";
+            Property 'key4' was updated. From [complex value] to [complex value]""";
 
     // Act
     String result = Formatter.format(diffs, "plain");

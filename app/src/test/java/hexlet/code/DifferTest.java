@@ -38,8 +38,8 @@ class DifferTest {
                   - follow: false
                     host: hexlet.io
                   - proxy: 123.234.53.22
-                  - timeout: 50
-                  + timeout: 20
+                  + proxy: 987.654.321.098
+                    timeout: 50
                   + verbose: true
                 }""";
 
@@ -85,8 +85,7 @@ class DifferTest {
     String actual1 = Differ.generate(json1, yaml1, format);
     String excepted1 = """
                 Property 'follow' was removed
-                Property 'proxy' was removed
-                Property 'timeout' was updated. From 50 to 20
+                Property 'proxy' was updated. From '123.234.53.22' to '987.654.321.098'
                 Property 'verbose' was added with value: true""";
 
     assertEquals(excepted1, actual1);
@@ -139,7 +138,8 @@ class DifferTest {
     String excepted2 = """
                 {
                   + host: hexlet.io
-                  + timeout: 20
+                  + proxy: 987.654.321.098
+                  + timeout: 50
                   + verbose: true
                 }""";
     assertEquals(excepted2, actual2);

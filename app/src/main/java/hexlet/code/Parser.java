@@ -3,7 +3,6 @@ package hexlet.code;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
@@ -12,7 +11,6 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.util.Map;
-import java.util.TreeMap;
 
 public class Parser {
   public Parser() {
@@ -33,16 +31,16 @@ public class Parser {
 
     String fileExtension = getFileExtension(filePath).toLowerCase();
     ObjectMapper mapper = getObjectMapper(fileExtension);
-    Map<String, Object> unsortedJsonMap;
+    Map<String, Object> map;
     try {
-      unsortedJsonMap = mapper.readValue(fileContent, new TypeReference<>() {});
+      map = mapper.readValue(fileContent, new TypeReference<>() {});
     } catch (JsonParseException e) {
       throw new RuntimeException("Invalid JSON format in file: " + filePath);
     } catch (JsonProcessingException e) {
       throw new RuntimeException("Error mapping JSON in file: " + filePath);
     }
 
-    return new TreeMap<>(unsortedJsonMap);
+    return map;
   }
 
   public static Path getPath(String filePath) {
