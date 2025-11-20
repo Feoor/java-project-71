@@ -12,22 +12,27 @@ import org.junit.jupiter.api.Test;
 
 class DifferTest {
 
-  private static final String FORMAT = "stylish";
+  private static String defaultFormat;
   private static Map<String, Object> json1;
   private static Map<String, Object> json2;
   private static Map<String, Object> yaml1;
+  private static Map<String, Object> yaml2;
 
   @BeforeAll
   static void setUp() {
+    defaultFormat = "stylish";
     json1 = parse("src/test/resources/fixtures/json1.json");
     json2 = parse("src/test/resources/fixtures/json2.json");
     yaml1 = parse("src/test/resources/fixtures/yaml1.yml");
+    yaml2 = parse("src/test/resources/fixtures/yaml2.yml");
   }
 
   @Test
-  void testGenerate() {
+  void testGenerateWithStylishFormat() {
+    String format = "stylish";
+    
     // Act & Assert
-    String actual1 = Differ.generate(json1, json2, FORMAT);
+    String actual1 = Differ.generate(json1, yaml1, format);
     String excepted1 = """
                 {
                   - follow: false
@@ -41,25 +46,8 @@ class DifferTest {
     assertEquals(excepted1, actual1);
 
     // Act & Assert
-    String actual2 = Differ.generate(json2, yaml1, FORMAT);
+    String actual2 = Differ.generate(json2, yaml2, format);
     String excepted2 = """
-                {
-                    host: hexlet.io
-                  + proxy: 987.654.321.098
-                  - timeout: 20
-                  + timeout: 50
-                    verbose: true
-                }""";
-
-    assertEquals(excepted2, actual2);
-
-    // Arrange
-    Map<String, Object> json3 = parse("src/test/resources/fixtures/json3.json");
-    Map<String, Object> yaml2 = parse("src/test/resources/fixtures/yaml2.yml");
-
-    // Act & Assert
-    String actual3 = Differ.generate(json3, yaml2, FORMAT);
-    String excepted3 = """
                 {
                     chars1: [a, b, c]
                   - chars2: [d, e, f]
@@ -86,13 +74,47 @@ class DifferTest {
                   + setting3: none
                 }""";
 
-    assertEquals(excepted3, actual3);
+    assertEquals(excepted2, actual2);
+  }
+
+  @Test
+  void testGenerateWithPlainFormat() {
+    String format = "plain";
+
+    // Act & Assert
+    String actual1 = Differ.generate(json1, yaml1, format);
+    String excepted1 = """
+                Property 'follow' was removed
+                Property 'proxy' was removed
+                Property 'timeout' was updated. From 50 to 20
+                Property 'verbose' was added with value: true""";
+
+    assertEquals(excepted1, actual1);
+
+    // Act & Assert
+    String actual2 = Differ.generate(json2, yaml2, format);
+    String excepted2 = """
+            Property 'chars2' was updated. From [complex value] to false
+            Property 'checked' was updated. From false to true
+            Property 'default' was updated. From null to [complex value]
+            Property 'id' was updated. From 45 to null
+            Property 'key1' was removed
+            Property 'key2' was added with value: 'value2'
+            Property 'numbers2' was updated. From [complex value] to [complex value]
+            Property 'numbers3' was removed
+            Property 'numbers4' was added with value: [complex value]
+            Property 'obj1' was added with value: [complex value]
+            Property 'setting1' was updated. From 'Some value' to 'Another value'
+            Property 'setting2' was updated. From 200 to 300
+            Property 'setting3' was updated. From true to 'none'""";
+
+    assertEquals(excepted2, actual2);
   }
 
   @Test
   void testEmptyGenerate() {
     try {
-      String actual = Differ.generate(null, null, FORMAT);
+      String actual = Differ.generate(null, null, defaultFormat);
       String excepted = "";
       assertNotNull(actual);
       assertEquals(excepted, actual);
@@ -103,7 +125,7 @@ class DifferTest {
 
   @Test
   void testGenerateWithOneEmpty() {
-    String actual = Differ.generate(json1, null, FORMAT);
+    String actual = Differ.generate(json1, null, defaultFormat);
     String excepted = """
                 {
                   - follow: false
@@ -113,7 +135,7 @@ class DifferTest {
                 }""";
     assertEquals(excepted, actual);
 
-    String actual2 = Differ.generate(null, json2, FORMAT);
+    String actual2 = Differ.generate(null, yaml1, defaultFormat);
     String excepted2 = """
                 {
                   + host: hexlet.io

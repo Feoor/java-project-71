@@ -14,7 +14,7 @@ test:
 	./gradlew test
 
 lint:
-	./gradlew check
+	./gradlew checkstyleMain checkstyleTest
 
 build:
 	./gradlew build

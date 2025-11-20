@@ -40,6 +40,29 @@ class FormatterTest {
   }
 
   @Test
+  void testFormatPlainWithAllStatuses() {
+    List<DiffEntry> diffs = List.of(
+            new DiffEntry("key1", null, "newValue", DiffEntry.DiffStatus.ADDED),
+            new DiffEntry("key2", "oldValue", null, DiffEntry.DiffStatus.REMOVED),
+            new DiffEntry("key3", "oldValue", "newValue", DiffEntry.DiffStatus.MODIFIED),
+            new DiffEntry("key4", List.of("a", "b", "c"), List.of("a", "b", "d"), DiffEntry.DiffStatus.MODIFIED),
+            new DiffEntry("key5", "sameValue", "sameValue", DiffEntry.DiffStatus.UNCHANGED)
+    );
+
+    String expectedOutput = """
+            Property 'key1' was added with value: 'newValue'
+            Property 'key2' was removed
+            Property 'key3' was updated. From 'oldValue' to 'newValue'
+            Property 'key4' was updated. From '[complex value]' to '[complex value]'""";
+
+    // Act
+    String result = Formatter.format(diffs, "plain");
+
+    // Assert
+    assertEquals(expectedOutput, result);
+  }
+
+  @Test
   void testFormatStylishWithEmptyDiffList() {
     // Arrange
     List<DiffEntry> emptyDiffs = List.of();
@@ -47,6 +70,19 @@ class FormatterTest {
 
     // Act
     String result = Formatter.format(emptyDiffs, "stylish");
+
+    // Assert
+    assertEquals(expectedOutput, result);
+  }
+
+  @Test
+  void testFormatPlainWithEmptyDiffList() {
+    // Arrange
+    List<DiffEntry> emptyDiffs = List.of();
+    String expectedOutput = "";
+
+    // Act
+    String result = Formatter.format(emptyDiffs, "plain");
 
     // Assert
     assertEquals(expectedOutput, result);

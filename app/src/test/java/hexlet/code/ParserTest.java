@@ -37,7 +37,7 @@ class ParserTest {
     assertEquals(excepted1, actual1);
 
     // Arrange
-    String path2 = "src/test/resources/fixtures/json3.json";
+    String path2 = "src/test/resources/fixtures/json2.json";
 
     // Act & Assert
     Map<String, Object> expectedMap = new HashMap<>();
