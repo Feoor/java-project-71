@@ -26,8 +26,8 @@ public class Formatter {
           sb.append("  - ").append(entry.key()).append(": ").append(entry.firstValue()).append("\n");
           sb.append("  + ").append(entry.key()).append(": ").append(entry.secondValue()).append("\n");
         }
-        case null, default ->
-                sb.append("    ").append(entry.key()).append(": ").append(entry.firstValue()).append("\n");
+        case UNCHANGED -> sb.append("    ").append(entry.key()).append(": ").append(entry.firstValue()).append("\n");
+        default -> throw new IllegalStateException("Unexpected value: " + entry.status());
       }
     }
 

@@ -40,7 +40,6 @@ class ParserTest {
     String path2 = "src/test/resources/fixtures/json3.json";
 
     // Act & Assert
-    Map<String, Object> actual2 = parse(path2);
     Map<String, Object> expectedMap = new HashMap<>();
     expectedMap.put("setting1", "Some value");
     expectedMap.put("setting2", 200);
@@ -55,6 +54,8 @@ class ParserTest {
     expectedMap.put("chars1", List.of("a", "b", "c"));
     expectedMap.put("chars2", List.of("d", "e", "f"));
 
+
+    Map<String, Object> actual2 = parse(path2);
     Map<String, Object> excepted2 = new TreeMap<>(expectedMap);
 
     assertEquals(excepted2, actual2);
@@ -80,7 +81,6 @@ class ParserTest {
     String path2 = "src/test/resources/fixtures/yaml2.yml";
 
     // Act & Assert
-    Map<String, Object> actual2 = parse(path2);
     Map<String, Object> expectedMap = new HashMap<>();
     expectedMap.put("setting1", "Another value");
     expectedMap.put("setting2", 300);
@@ -96,6 +96,7 @@ class ParserTest {
     expectedMap.put("chars2", false);
     expectedMap.put("obj1", Map.of("nestedKey", "value", "isNested", true));
 
+    Map<String, Object> actual2 = parse(path2);
     Map<String, Object> excepted2 = new TreeMap<>(expectedMap);
 
     assertEquals(excepted2, actual2);
