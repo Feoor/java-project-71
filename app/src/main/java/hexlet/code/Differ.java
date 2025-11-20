@@ -1,6 +1,11 @@
 package hexlet.code;
 
 import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Set;
+import java.util.HashSet;
 import java.util.Objects;
 
 public class Differ {
@@ -9,7 +14,7 @@ public class Differ {
     throw new IllegalStateException("Utility class");
   }
 
-  public static String generate(Map<String, Object> map1, Map<String, Object> map2) {
+  public static String generate(Map<String, Object> map1, Map<String, Object> map2, String format) {
     if (map1 == null && map2 == null) {
       return "";
     }
@@ -17,32 +22,31 @@ public class Differ {
     final Map<String, Object> data1 = map1 == null ? Map.of() : map1;
     final Map<String, Object> data2 = map2 == null ? Map.of() : map2;
 
-    StringBuilder result = new StringBuilder("{\n");
+    List<DiffEntry> diff = buildDiff(data1, data2);
 
-    // Bypass of keys that are not in the second comparison object,
-    // as well as the difference in values
-    data1.keySet().forEach(key -> {
-      Object value1 = data1.get(key);
-      Object value2 = data2.get(key);
+    diff.sort(Comparator.comparing(DiffEntry::key));
 
-      // TODO: Maybe it is worth making some kind of array where the differences will be recorded,
-      //  and then sorting in alphabetical order, instead of getting a sorted TreeMap<>()
-      if (!data2.containsKey(key)) {
-        result.append("  - ").append(key).append(": ").append(value1).append("\n");
-      } else if (!Objects.equals(value1, value2)) {
-        result.append("  - ").append(key).append(": ").append(value1).append("\n");
-        result.append("  + ").append(key).append(": ").append(value2).append("\n");
-      } else {
-        result.append("    ").append(key).append(": ").append(value1).append("\n");
+    return Formatter.format(diff, format);
+  }
+
+  public static List<DiffEntry> buildDiff(Map<String, Object> data1, Map<String, Object> data2) {
+    List<DiffEntry> diff = new ArrayList<>();
+    Set<String> keys = new HashSet<>(data1.keySet());
+    keys.addAll(data2.keySet());
+
+    for (String key : keys) {
+      if (!data2.containsKey(key)) { // if the key is only in data1
+        diff.add(new DiffEntry(key, data1.get(key), null, DiffEntry.DiffStatus.REMOVED));
+      } else if (!data1.containsKey(key)) { // if the key is only in data2
+        diff.add(new DiffEntry(key, null, data2.get(key), DiffEntry.DiffStatus.ADDED));
+      } else if (!Objects.equals(data1.get(key), data2.get(key))) { // if the key in data2 not equal to data1
+        diff.add(new DiffEntry(key, data1.get(key), data2.get(key), DiffEntry.DiffStatus.MODIFIED));
+      } else { // if the key is in data1 and data2 and equal
+        diff.add(new DiffEntry(key, data1.get(key), data2.get(key), DiffEntry.DiffStatus.UNCHANGED));
       }
-    });
+    }
 
-    // Bypass of keys that are not in the first comparison object
-    data2.keySet().stream()
-            .filter(key -> !data1.containsKey(key))
-            .forEach(key -> result.append("  + ").append(key).append(": ").append(data2.get(key)).append("\n"));
-
-    return result.append("}").toString();
+    return diff;
   }
 
 }

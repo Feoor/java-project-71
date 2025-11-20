@@ -23,7 +23,7 @@ public class App implements Runnable {
     try {
       Map<String, Object> data1 = Parser.parse(file1);
       Map<String, Object> data2 = Parser.parse(file2);
-      String diff = Differ.generate(data1, data2);
+      String diff = Differ.generate(data1, data2, format);
       System.out.println(diff);
     } catch (RuntimeException e) {
       System.err.println("Error: " + e.getMessage());
