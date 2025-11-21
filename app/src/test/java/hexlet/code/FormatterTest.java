@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
-
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -32,7 +31,7 @@ class FormatterTest {
   }
 
   @Test
-  void testFormatStylishWithAllStatuses() {
+  void testFormatStylishWithAllStatuses() throws Exception {
     // Arrange
     String expectedOutput = """
             {
@@ -53,7 +52,7 @@ class FormatterTest {
   }
 
   @Test
-  void testFormatPlainWithAllStatuses() {
+  void testFormatPlainWithAllStatuses() throws Exception {
     // Arrange
     String expectedOutput = """
             Property 'key1' was added with value: 'newValue'
@@ -69,40 +68,34 @@ class FormatterTest {
   }
 
   @Test
-  void testFormatJsonWithAllStatuses() {
+  void testFormatJsonWithAllStatuses() throws Exception  {
     // Arrange
     String expectedOutput = """
             {
-              "diffs": [
-                {
-                  "key": "key1",
-                  "status": "added",
-                  "newValue": "newValue"
-                },
-                {
-                  "key": "key2",
-                  "status": "removed",
-                  "oldValue": "oldValue",
-                },
-                {
-                  "key": "key3",
-                  "status": "updated",
-                  "oldValue": "oldValue",
-                  "newValue": "newValue"
-                },
-                {
-                  "key": "key4",
-                  "status": "updated",
-                  "oldValue": ["a", "b", "c"],
-                  "newValue": ["e", "f", "g"]
-                },
-                {
-                  "key": "key5",
-                  "status": "unchanged",
-                  "oldValue": "sameValue",
-                  "newValue": "sameValue"
-                }
-              ]
+              "diffs" : [ {
+                "key" : "key1",
+                "status" : "added",
+                "newValue" : "newValue"
+              }, {
+                "key" : "key2",
+                "status" : "removed",
+                "oldValue" : "oldValue"
+              }, {
+                "key" : "key3",
+                "status" : "modified",
+                "oldValue" : "oldValue",
+                "newValue" : "newValue"
+              }, {
+                "key" : "key4",
+                "status" : "modified",
+                "oldValue" : [ "a", "b", "c" ],
+                "newValue" : [ "e", "f", "g" ]
+              }, {
+                "key" : "key5",
+                "status" : "unchanged",
+                "oldValue" : "sameValue",
+                "newValue" : "sameValue"
+              } ]
             }""";
 
     // Act
@@ -113,7 +106,7 @@ class FormatterTest {
   }
 
   @Test
-  void testFormatStylishWithEmptyDiffList() {
+  void testFormatStylishWithEmptyDiffList() throws Exception  {
     // Arrange
     String expectedOutput = "{\n}";
 
@@ -125,7 +118,7 @@ class FormatterTest {
   }
 
   @Test
-  void testFormatPlainWithEmptyDiffList() {
+  void testFormatPlainWithEmptyDiffList() throws Exception  {
     // Arrange
     String expectedOutput = "";
 
@@ -137,11 +130,11 @@ class FormatterTest {
   }
 
   @Test
-  void testFormatJsonWithEmptyDiffList() {
+  void testFormatJsonWithEmptyDiffList() throws Exception  {
     // Arrange
     String expectedOutput = """
             {
-              diffs: []
+              "diffs" : [ ]
             }""";
 
     // Act

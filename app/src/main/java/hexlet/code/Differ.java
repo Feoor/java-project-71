@@ -1,5 +1,6 @@
 package hexlet.code;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -14,7 +15,11 @@ public class Differ {
     throw new IllegalStateException("Utility class");
   }
 
-  public static String generate(Map<String, Object> map1, Map<String, Object> map2, String format) {
+  public static String generate(
+          Map<String, Object> map1,
+          Map<String, Object> map2,
+          String format
+  ) throws JsonProcessingException {
     if (map1 == null && map2 == null) {
       return "";
     }
