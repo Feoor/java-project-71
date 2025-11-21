@@ -1,32 +1,30 @@
 package hexlet.code;
 
-import static hexlet.code.Parser.parse;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import java.util.Map;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 class DifferTest {
 
   private static String defaultFormat;
-  private static Map<String, Object> json1;
-  private static Map<String, Object> json2;
-  private static Map<String, Object> yaml1;
-  private static Map<String, Object> yaml2;
+  private static String json1;
+  private static String json2;
+  private static String yaml1;
+  private static String yaml2;
 
   @BeforeAll
   static void setUp() {
     defaultFormat = "stylish";
-    json1 = parse("src/test/resources/fixtures/json1.json");
-    json2 = parse("src/test/resources/fixtures/json2.json");
-    yaml1 = parse("src/test/resources/fixtures/yaml1.yml");
-    yaml2 = parse("src/test/resources/fixtures/yaml2.yml");
+    json1 = "src/test/resources/fixtures/json1.json";
+    json2 = "src/test/resources/fixtures/json2.json";
+    yaml1 = "src/test/resources/fixtures/yaml1.yml";
+    yaml2 = "src/test/resources/fixtures/yaml2.yml";
   }
 
   @Test
-  void testGenerateWithStylishFormat() throws Exception {
+  void testGenerateWithStylishFormat() {
     String format = "stylish";
     
     // Act & Assert
@@ -76,7 +74,7 @@ class DifferTest {
   }
 
   @Test
-  void testGenerateWithPlainFormat() throws Exception {
+  void testGenerateWithPlainFormat() {
     String format = "plain";
 
     // Act & Assert
@@ -109,7 +107,7 @@ class DifferTest {
   }
 
   @Test
-  void testGenerateWithJsonFormat() throws Exception {
+  void testGenerateWithJsonFormat() {
     String format = "json";
 
     // Act & Assert
@@ -158,7 +156,7 @@ class DifferTest {
   }
 
   @Test
-  void testGenerateWithOneEmpty() throws Exception {
+  void testGenerateWithOneEmpty() {
     String actual = Differ.generate(json1, null, defaultFormat);
     String excepted = """
                 {

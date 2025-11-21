@@ -1,6 +1,5 @@
 package hexlet.code;
 
-import java.util.Map;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -25,9 +24,7 @@ public class App implements Runnable {
   @Override
   public void run() {
     try {
-      Map<String, Object> data1 = Parser.parse(file1);
-      Map<String, Object> data2 = Parser.parse(file2);
-      String diff = Differ.generate(data1, data2, format);
+      String diff = Differ.generate(file1, file2, format);
       System.out.println(diff);
     } catch (Exception e) {
       System.err.println("Error: " + e.getMessage());

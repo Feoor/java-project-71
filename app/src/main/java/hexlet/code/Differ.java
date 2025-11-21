@@ -16,22 +16,33 @@ public class Differ {
   }
 
   public static String generate(
-          Map<String, Object> map1,
-          Map<String, Object> map2,
+          String filePath1,
+          String filePath2,
           String format
-  ) throws JsonProcessingException {
-    if (map1 == null && map2 == null) {
+  )  {
+    if (filePath1 == null && filePath2 == null) {
       return "";
     }
 
-    final Map<String, Object> data1 = map1 == null ? Map.of() : map1;
-    final Map<String, Object> data2 = map2 == null ? Map.of() : map2;
+    Map<String, Object> data1 = filePath1 == null ? Map.of() : Parser.parse(filePath1);
+    Map<String, Object> data2 = filePath2 == null ? Map.of() : Parser.parse(filePath2);
 
     List<DiffEntry> diff = buildDiff(data1, data2);
 
     diff.sort(Comparator.comparing(DiffEntry::key));
 
-    return Formatter.format(diff, format);
+    String result = "";
+    try {
+      result = Formatter.format(diff, format);
+    } catch (JsonProcessingException e) {
+      System.err.println("Error formatting diff: " + e.getMessage());
+    }
+
+    return result;
+  }
+
+  public static String generate(String filePath1, String filePath2) {
+    return generate(filePath1, filePath2, "stylish");
   }
 
   public static List<DiffEntry> buildDiff(Map<String, Object> data1, Map<String, Object> data2) {
