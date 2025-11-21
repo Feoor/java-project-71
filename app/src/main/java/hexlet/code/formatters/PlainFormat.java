@@ -4,63 +4,63 @@ import hexlet.code.DiffEntry;
 import java.util.List;
 import java.util.Map;
 
-public class PlainFormat implements Format {
-  private PlainFormat() {
-    throw new IllegalStateException("Utility class");
-  }
+public final class PlainFormat implements Format {
+    private PlainFormat() {
+        throw new IllegalStateException("Utility class");
+    }
 
-  public static String format(List<DiffEntry> diff) {
-    StringBuilder sb = new StringBuilder();
+    public static String format(List<DiffEntry> diff) {
+        StringBuilder sb = new StringBuilder();
 
-    for (DiffEntry entry : diff) {
-      switch (entry.status()) {
-        case ADDED -> sb.append("Property ")
-                .append(getFormattedKey(entry.key()))
-                .append(" was added with value: ")
-                .append(getFormattedValue(entry.newValue()))
-                .append("\n");
-        case REMOVED -> sb.append("Property ")
-                .append(getFormattedKey(entry.key()))
-                .append(" was removed")
-                .append("\n");
-        case MODIFIED -> sb.append("Property ")
-                .append(getFormattedKey(entry.key()))
-                .append(" was updated. From ")
-                .append(getFormattedValue(entry.oldValue()))
-                .append(" to ")
-                .append(getFormattedValue(entry.newValue()))
-                .append("\n");
-        case UNCHANGED -> {
-          // Do nothing for unchanged entries
+        for (DiffEntry entry : diff) {
+            switch (entry.status()) {
+                case ADDED -> sb.append("Property ")
+                        .append(getFormattedKey(entry.key()))
+                        .append(" was added with value: ")
+                        .append(getFormattedValue(entry.newValue()))
+                        .append("\n");
+                case REMOVED -> sb.append("Property ")
+                        .append(getFormattedKey(entry.key()))
+                        .append(" was removed")
+                        .append("\n");
+                case MODIFIED -> sb.append("Property ")
+                        .append(getFormattedKey(entry.key()))
+                        .append(" was updated. From ")
+                        .append(getFormattedValue(entry.oldValue()))
+                        .append(" to ")
+                        .append(getFormattedValue(entry.newValue()))
+                        .append("\n");
+                case UNCHANGED -> {
+                    // Do nothing for unchanged entries
+                }
+                default -> throw new IllegalStateException("Unexpected value: " + entry.status());
+            }
         }
-        default -> throw new IllegalStateException("Unexpected value: " + entry.status());
-      }
+
+        if (!sb.isEmpty()) {
+            sb.setLength(sb.length() - 1);
+        }
+
+        return sb.toString();
     }
 
-    if (!sb.isEmpty()) {
-      sb.setLength(sb.length() - 1);
+    private static String getFormattedKey(String key) {
+        return "'" + key + "'";
     }
 
-    return sb.toString();
-  }
+    private static String getFormattedValue(Object value) {
+        if (value instanceof List || value instanceof Map) {
+            return "[complex value]";
+        }
 
-  private static String getFormattedKey(String key) {
-    return "'" + key + "'";
-  }
+        if (value == null) {
+            return "null";
+        }
 
-  private static String getFormattedValue(Object value) {
-    if (value instanceof List || value instanceof Map) {
-      return "[complex value]";
+        if (value instanceof String) {
+            return "'" + value + "'";
+        }
+
+        return String.valueOf(value);
     }
-
-    if (value == null) {
-      return "null";
-    }
-
-    if (value instanceof String) {
-      return "'" + value + "'";
-    }
-
-    return String.valueOf(value);
-  }
 }

@@ -22,7 +22,7 @@ application {
 
 checkstyle {
     toolVersion = checkstyleVersion
-    configFile = file("config/checkstyle/google_checks.xml")
+    configFile = file("config/checkstyle/checkstyle.xml")
     maxWarnings = 0
 }
 

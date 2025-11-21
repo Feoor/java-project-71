@@ -19,34 +19,34 @@ import org.junit.jupiter.params.provider.MethodSource;
  */
 class FormatterTest {
 
-  private static List<DiffEntry> diffs;
-  private static List<DiffEntry> emptyDiffs;
+    private static List<DiffEntry> diffs;
+    private static List<DiffEntry> emptyDiffs;
 
-  @BeforeAll
-  static void setUp() {
-    diffs = List.of(
-            new DiffEntry("key1", null, "newValue", DiffEntry.DiffStatus.ADDED),
-            new DiffEntry("key2", "oldValue", null, DiffEntry.DiffStatus.REMOVED),
-            new DiffEntry("key3", "oldValue", "newValue", DiffEntry.DiffStatus.MODIFIED),
-            new DiffEntry("key4", List.of("a", "b", "c"), List.of("e", "f", "g"), DiffEntry.DiffStatus.MODIFIED),
-            new DiffEntry("key5", "sameValue", "sameValue", DiffEntry.DiffStatus.UNCHANGED)
-    );
-    emptyDiffs = List.of();
-  }
+    @BeforeAll
+    static void setUp() {
+        diffs = List.of(
+                new DiffEntry("key1", null, "newValue", DiffEntry.DiffStatus.ADDED),
+                new DiffEntry("key2", "oldValue", null, DiffEntry.DiffStatus.REMOVED),
+                new DiffEntry("key3", "oldValue", "newValue", DiffEntry.DiffStatus.MODIFIED),
+                new DiffEntry("key4", List.of("a", "b", "c"), List.of("e", "f", "g"), DiffEntry.DiffStatus.MODIFIED),
+                new DiffEntry("key5", "sameValue", "sameValue", DiffEntry.DiffStatus.UNCHANGED)
+        );
+        emptyDiffs = List.of();
+    }
 
-  @ParameterizedTest
-  @MethodSource({"provideFormats"})
-  void testFormatWithAllStatuses(String format, String expectedOutput) throws Exception {
-    // Act
-    String result = Formatter.format(diffs, format);
+    @ParameterizedTest
+    @MethodSource({"provideFormats"})
+    void testFormatWithAllStatuses(String format, String expectedOutput) throws Exception {
+        // Act
+        String result = Formatter.format(diffs, format);
 
-    // Assert
-    assertEquals(expectedOutput, result);
-  }
+        // Assert
+        assertEquals(expectedOutput, result);
+    }
 
-  static Stream<Arguments> provideFormats() {
-    return Stream.of(
-      Arguments.of("stylish", """
+    static Stream<Arguments> provideFormats() {
+        return Stream.of(
+                Arguments.of("stylish", """
               {
                 + key1: newValue
                 - key2: oldValue
@@ -56,12 +56,12 @@ class FormatterTest {
                 + key4: [e, f, g]
                   key5: sameValue
               }"""),
-      Arguments.of("plain", """
+                Arguments.of("plain", """
               Property 'key1' was added with value: 'newValue'
               Property 'key2' was removed
               Property 'key3' was updated. From 'oldValue' to 'newValue'
               Property 'key4' was updated. From [complex value] to [complex value]"""),
-      Arguments.of("json", """
+                Arguments.of("json", """
               {
                 "diffs" : [ {
                   "key" : "key1",
@@ -88,60 +88,60 @@ class FormatterTest {
                   "newValue" : "sameValue"
                 } ]
               }""")
-    );
-  }
+        );
+    }
 
-  @Test
-  void testFormatStylishWithEmptyDiffList() throws Exception  {
-    // Arrange
-    String expectedOutput = "{\n}";
+    @Test
+    void testFormatStylishWithEmptyDiffList() throws Exception  {
+        // Arrange
+        String expectedOutput = "{\n}";
 
-    // Act
-    String result = Formatter.format(emptyDiffs, "stylish");
+        // Act
+        String result = Formatter.format(emptyDiffs, "stylish");
 
-    // Assert
-    assertEquals(expectedOutput, result);
-  }
+        // Assert
+        assertEquals(expectedOutput, result);
+    }
 
-  @Test
-  void testFormatPlainWithEmptyDiffList() throws Exception  {
-    // Arrange
-    String expectedOutput = "";
+    @Test
+    void testFormatPlainWithEmptyDiffList() throws Exception  {
+        // Arrange
+        String expectedOutput = "";
 
-    // Act
-    String result = Formatter.format(emptyDiffs, "plain");
+        // Act
+        String result = Formatter.format(emptyDiffs, "plain");
 
-    // Assert
-    assertEquals(expectedOutput, result);
-  }
+        // Assert
+        assertEquals(expectedOutput, result);
+    }
 
-  @Test
-  void testFormatJsonWithEmptyDiffList() throws Exception  {
-    // Arrange
-    String expectedOutput = """
+    @Test
+    void testFormatJsonWithEmptyDiffList() throws Exception  {
+        // Arrange
+        String expectedOutput = """
             {
               "diffs" : [ ]
             }""";
 
-    // Act
-    String result = Formatter.format(emptyDiffs, "json");
+        // Act
+        String result = Formatter.format(emptyDiffs, "json");
 
-    // Assert
-    assertEquals(expectedOutput, result);
-  }
+        // Assert
+        assertEquals(expectedOutput, result);
+    }
 
-  @Test
-  void testFormatWithUnknownFormatThrowsException() {
-    // Arrange
-    List<DiffEntry> invalidDiff = List.of(
-            new DiffEntry("key1", null, "value1", DiffEntry.DiffStatus.ADDED)
-    );
+    @Test
+    void testFormatWithUnknownFormatThrowsException() {
+        // Arrange
+        List<DiffEntry> invalidDiff = List.of(
+                new DiffEntry("key1", null, "value1", DiffEntry.DiffStatus.ADDED)
+        );
 
-    // Act & Assert
-    IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> Formatter.format(
-            invalidDiff,
-            "unknown"
-    ));
-    assertEquals("Unknown format: unknown", exception.getMessage());
-  }
+        // Act & Assert
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> Formatter.format(
+                invalidDiff,
+                "unknown"
+        ));
+        assertEquals("Unknown format: unknown", exception.getMessage());
+    }
 }
