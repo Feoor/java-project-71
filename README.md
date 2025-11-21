@@ -1,6 +1,6 @@
 # Demonstration
 
-[![asciicast](https://asciinema.org/a/BGeadswuEWICNWTREPAP06f1U.svg)](https://asciinema.org/a/BGeadswuEWICNWTREPAP06f1U)
+[![asciicast](https://asciinema.org/a/757310.svg)](https://asciinema.org/a/757310)
 
 ### Code quality & tests
 [![Java CI](https://github.com/Feoor/java-project-71/actions/workflows/build.yml/badge.svg)](https://github.com/Feoor/java-project-71/actions/workflows/build.yml)
