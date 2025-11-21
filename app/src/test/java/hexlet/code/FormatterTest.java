@@ -158,11 +158,4 @@ class FormatterTest {
     ));
     assertEquals("Unknown format: unknown", exception.getMessage());
   }
-
-  @Test
-  void testConstructorThrowsException() {
-    // Act & Assert
-    IllegalStateException exception = assertThrows(IllegalStateException.class, Formatter::new);
-    assertEquals("Utility class", exception.getMessage());
-  }
 }

@@ -11,7 +11,7 @@ import java.util.Set;
 
 public class Differ {
 
-  public Differ() {
+  private Differ() {
     throw new IllegalStateException("Utility class");
   }
 

@@ -13,7 +13,7 @@ import java.nio.file.Path;
 import java.util.Map;
 
 public class Parser {
-  public Parser() {
+  private Parser() {
     throw new IllegalStateException("Utility class");
   }
 

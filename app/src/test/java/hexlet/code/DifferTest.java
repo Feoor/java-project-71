@@ -3,8 +3,6 @@ package hexlet.code;
 import static hexlet.code.Parser.parse;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Map;
 import org.junit.jupiter.api.BeforeAll;
@@ -180,16 +178,5 @@ class DifferTest {
                   + verbose: true
                 }""";
     assertEquals(excepted2, actual2);
-  }
-
-  @Test
-  void testDifferClass() {
-    Exception exception = assertThrows(
-            IllegalStateException.class,
-            Differ::new,
-            "Expected constructor to throw IllegalStateException"
-    );
-
-    assertTrue(exception.getMessage().contains("Utility class"));
   }
 }

@@ -159,15 +159,4 @@ class ParserTest {
     assertTrue(exception.getMessage().contains("Unsupported file format:"),
             "Should throw an exception if the file extension is not supported");
   }
-
-  @Test
-  void testConstructor() {
-    // Act & Assert
-    IllegalStateException exception = assertThrows(
-            IllegalStateException.class,
-            Parser::new,
-            "Expected constructor to throw IllegalStateException"
-    );
-    assertEquals("Utility class", exception.getMessage());
-  }
 }

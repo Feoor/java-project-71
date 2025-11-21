@@ -8,7 +8,7 @@ import java.util.List;
 
 public class Formatter {
 
-  public Formatter() {
+  private Formatter() {
     throw new IllegalStateException("Utility class");
   }
 
