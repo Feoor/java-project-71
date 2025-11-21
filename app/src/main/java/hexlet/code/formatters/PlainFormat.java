@@ -1,7 +1,6 @@
 package hexlet.code.formatters;
 
 import hexlet.code.DiffEntry;
-
 import java.util.List;
 import java.util.Map;
 
@@ -15,7 +14,7 @@ public class PlainFormat implements Format {
         case ADDED -> sb.append("Property ")
                 .append(getFormattedKey(entry.key()))
                 .append(" was added with value: ")
-                .append(getFormattedValue(entry.secondValue()))
+                .append(getFormattedValue(entry.newValue()))
                 .append("\n");
         case REMOVED -> sb.append("Property ")
                 .append(getFormattedKey(entry.key()))
@@ -24,9 +23,9 @@ public class PlainFormat implements Format {
         case MODIFIED -> sb.append("Property ")
                 .append(getFormattedKey(entry.key()))
                 .append(" was updated. From ")
-                .append(getFormattedValue(entry.firstValue()))
+                .append(getFormattedValue(entry.oldValue()))
                 .append(" to ")
-                .append(getFormattedValue(entry.secondValue()))
+                .append(getFormattedValue(entry.newValue()))
                 .append("\n");
         case UNCHANGED -> {
           // Do nothing for unchanged entries

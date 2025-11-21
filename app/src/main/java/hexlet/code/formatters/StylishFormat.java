@@ -10,13 +10,13 @@ public class StylishFormat implements Format {
 
     for (DiffEntry entry : diff) {
       switch (entry.status()) {
-        case ADDED -> sb.append("  + ").append(entry.key()).append(": ").append(entry.secondValue()).append("\n");
-        case REMOVED -> sb.append("  - ").append(entry.key()).append(": ").append(entry.firstValue()).append("\n");
+        case ADDED -> sb.append("  + ").append(entry.key()).append(": ").append(entry.newValue()).append("\n");
+        case REMOVED -> sb.append("  - ").append(entry.key()).append(": ").append(entry.oldValue()).append("\n");
         case MODIFIED -> {
-          sb.append("  - ").append(entry.key()).append(": ").append(entry.firstValue()).append("\n");
-          sb.append("  + ").append(entry.key()).append(": ").append(entry.secondValue()).append("\n");
+          sb.append("  - ").append(entry.key()).append(": ").append(entry.oldValue()).append("\n");
+          sb.append("  + ").append(entry.key()).append(": ").append(entry.newValue()).append("\n");
         }
-        case UNCHANGED -> sb.append("    ").append(entry.key()).append(": ").append(entry.firstValue()).append("\n");
+        case UNCHANGED -> sb.append("    ").append(entry.key()).append(": ").append(entry.oldValue()).append("\n");
         default -> throw new IllegalStateException("Unexpected value: " + entry.status());
       }
     }

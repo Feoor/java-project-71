@@ -111,6 +111,49 @@ class DifferTest {
   }
 
   @Test
+  void testGenerateWithJsonFormat() {
+    String format = "json";
+
+    // Act & Assert
+    String actual1 = Differ.generate(json1, yaml1, format);
+    String excepted1 = """
+                {
+                  "diffs": [
+                    {
+                      "key": "follow",
+                      "status": "removed",
+                      "oldValue": false,
+                    },
+                    {
+                      "key": "host",
+                      "status": "unchanged",
+                      "oldValue": "hexlet.io",
+                      "newValue": "hexlet.io"
+                    },
+                    {
+                      "key": "proxy",
+                      "status": "updated",
+                      "oldValue": "123.234.53.22",
+                      "newValue": "987.654.321.098"
+                    },
+                    {
+                      "key": "timeout",
+                      "status": "unchanged",
+                      "oldValue": 50,
+                      "newValue": 50
+                    },
+                    {
+                      "key": "verbose",
+                      "status": "added",
+                      "newValue": true
+                    }
+                  ]
+                }""";
+
+    assertEquals(excepted1, actual1);
+  }
+
+  @Test
   void testEmptyGenerate() {
     try {
       String actual = Differ.generate(null, null, defaultFormat);

@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
+
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -14,22 +16,33 @@ import org.junit.jupiter.api.Test;
  */
 class FormatterTest {
 
-  @Test
-  void testFormatStylishWithAllStatuses() {
-    // Arrange
-    List<DiffEntry> diffs = List.of(
+  private static List<DiffEntry> diffs;
+  private static List<DiffEntry> emptyDiffs;
+
+  @BeforeAll
+  static void setUp() {
+    diffs = List.of(
             new DiffEntry("key1", null, "newValue", DiffEntry.DiffStatus.ADDED),
             new DiffEntry("key2", "oldValue", null, DiffEntry.DiffStatus.REMOVED),
             new DiffEntry("key3", "oldValue", "newValue", DiffEntry.DiffStatus.MODIFIED),
-            new DiffEntry("key4", "sameValue", "sameValue", DiffEntry.DiffStatus.UNCHANGED)
+            new DiffEntry("key4", List.of("a", "b", "c"), List.of("e", "f", "g"), DiffEntry.DiffStatus.MODIFIED),
+            new DiffEntry("key5", "sameValue", "sameValue", DiffEntry.DiffStatus.UNCHANGED)
     );
+    emptyDiffs = List.of();
+  }
+
+  @Test
+  void testFormatStylishWithAllStatuses() {
+    // Arrange
     String expectedOutput = """
             {
               + key1: newValue
               - key2: oldValue
               - key3: oldValue
               + key3: newValue
-                key4: sameValue
+              - key4: [a, b, c]
+              + key4: [e, f, g]
+                key5: sameValue
             }""";
 
     // Act
@@ -41,14 +54,7 @@ class FormatterTest {
 
   @Test
   void testFormatPlainWithAllStatuses() {
-    List<DiffEntry> diffs = List.of(
-            new DiffEntry("key1", null, "newValue", DiffEntry.DiffStatus.ADDED),
-            new DiffEntry("key2", "oldValue", null, DiffEntry.DiffStatus.REMOVED),
-            new DiffEntry("key3", "oldValue", "newValue", DiffEntry.DiffStatus.MODIFIED),
-            new DiffEntry("key4", List.of("a", "b", "c"), List.of("a", "b", "d"), DiffEntry.DiffStatus.MODIFIED),
-            new DiffEntry("key5", "sameValue", "sameValue", DiffEntry.DiffStatus.UNCHANGED)
-    );
-
+    // Arrange
     String expectedOutput = """
             Property 'key1' was added with value: 'newValue'
             Property 'key2' was removed
@@ -63,9 +69,52 @@ class FormatterTest {
   }
 
   @Test
+  void testFormatJsonWithAllStatuses() {
+    // Arrange
+    String expectedOutput = """
+            {
+              "diffs": [
+                {
+                  "key": "key1",
+                  "status": "added",
+                  "newValue": "newValue"
+                },
+                {
+                  "key": "key2",
+                  "status": "removed",
+                  "oldValue": "oldValue",
+                },
+                {
+                  "key": "key3",
+                  "status": "updated",
+                  "oldValue": "oldValue",
+                  "newValue": "newValue"
+                },
+                {
+                  "key": "key4",
+                  "status": "updated",
+                  "oldValue": ["a", "b", "c"],
+                  "newValue": ["e", "f", "g"]
+                },
+                {
+                  "key": "key5",
+                  "status": "unchanged",
+                  "oldValue": "sameValue",
+                  "newValue": "sameValue"
+                }
+              ]
+            }""";
+
+    // Act
+    String result = Formatter.format(diffs, "json");
+
+    // Assert
+    assertEquals(expectedOutput, result);
+  }
+
+  @Test
   void testFormatStylishWithEmptyDiffList() {
     // Arrange
-    List<DiffEntry> emptyDiffs = List.of();
     String expectedOutput = "{\n}";
 
     // Act
@@ -78,11 +127,25 @@ class FormatterTest {
   @Test
   void testFormatPlainWithEmptyDiffList() {
     // Arrange
-    List<DiffEntry> emptyDiffs = List.of();
     String expectedOutput = "";
 
     // Act
     String result = Formatter.format(emptyDiffs, "plain");
+
+    // Assert
+    assertEquals(expectedOutput, result);
+  }
+
+  @Test
+  void testFormatJsonWithEmptyDiffList() {
+    // Arrange
+    String expectedOutput = """
+            {
+              diffs: []
+            }""";
+
+    // Act
+    String result = Formatter.format(emptyDiffs, "json");
 
     // Assert
     assertEquals(expectedOutput, result);

@@ -29,13 +29,8 @@ public class App implements Runnable {
       Map<String, Object> data2 = Parser.parse(file2);
       String diff = Differ.generate(data1, data2, format);
       System.out.println(diff);
-    } catch (RuntimeException e) {
-      System.err.println("Error: " + e.getMessage());
-      System.exit(1);
     } catch (Exception e) {
-      System.err.println("Unexpected error: " + e.getMessage());
-      e.printStackTrace();
-      System.exit(2);
+      System.err.println("Error: " + e.getMessage());
     }
   }
 

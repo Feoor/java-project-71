@@ -23,8 +23,8 @@ public class DiffEntryTest {
 
     assertNotNull(entry);
     assertEquals("key", entry.key());
-    assertEquals("value1", entry.firstValue());
-    assertEquals("value1", entry.secondValue());
+    assertEquals("value1", entry.oldValue());
+    assertEquals("value1", entry.newValue());
     assertEquals(DiffEntry.DiffStatus.UNCHANGED, entry.status());
   }
 
@@ -38,7 +38,7 @@ public class DiffEntryTest {
     ));
 
     assertEquals(
-            "ADDED entries should not have firstValue",
+            "ADDED entries should not have oldValue",
             exception1.getMessage(),
             "Unexpected exception2 message"
     );
@@ -51,7 +51,7 @@ public class DiffEntryTest {
     ));
 
     assertEquals(
-            "REMOVED entries should not have secondValue",
+            "REMOVED entries should not have newValue",
             exception2.getMessage(),
             "Unexpected exception2 message"
     );
