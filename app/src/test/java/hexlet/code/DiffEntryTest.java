@@ -6,14 +6,14 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 
-public class DiffEntryTest {
+class DiffEntryTest {
 
   /**
    * The DiffEntry class represents a single entry in a diff.
    */
 
   @Test
-  public void testDummy() {
+  void testDummy() {
     DiffEntry entry = new DiffEntry(
             "key",
             "value1",
@@ -29,7 +29,7 @@ public class DiffEntryTest {
   }
 
   @Test
-  public void testConstructorThrowsException() {
+  void testConstructorThrowsException() {
     Exception exception1 = assertThrows(IllegalArgumentException.class, () -> new DiffEntry(
             "key",
             "value1",

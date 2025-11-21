@@ -4,8 +4,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 /**
  * Tests for the Formatter class.
@@ -30,79 +34,61 @@ class FormatterTest {
     emptyDiffs = List.of();
   }
 
-  @Test
-  void testFormatStylishWithAllStatuses() throws Exception {
-    // Arrange
-    String expectedOutput = """
-            {
-              + key1: newValue
-              - key2: oldValue
-              - key3: oldValue
-              + key3: newValue
-              - key4: [a, b, c]
-              + key4: [e, f, g]
-                key5: sameValue
-            }""";
-
+  @ParameterizedTest
+  @MethodSource({"provideFormats"})
+  void testFormatWithAllStatuses(String format, String expectedOutput) throws Exception {
     // Act
-    String result = Formatter.format(diffs, "stylish");
+    String result = Formatter.format(diffs, format);
 
     // Assert
     assertEquals(expectedOutput, result);
   }
 
-  @Test
-  void testFormatPlainWithAllStatuses() throws Exception {
-    // Arrange
-    String expectedOutput = """
-            Property 'key1' was added with value: 'newValue'
-            Property 'key2' was removed
-            Property 'key3' was updated. From 'oldValue' to 'newValue'
-            Property 'key4' was updated. From [complex value] to [complex value]""";
-
-    // Act
-    String result = Formatter.format(diffs, "plain");
-
-    // Assert
-    assertEquals(expectedOutput, result);
-  }
-
-  @Test
-  void testFormatJsonWithAllStatuses() throws Exception  {
-    // Arrange
-    String expectedOutput = """
-            {
-              "diffs" : [ {
-                "key" : "key1",
-                "status" : "added",
-                "newValue" : "newValue"
-              }, {
-                "key" : "key2",
-                "status" : "removed",
-                "oldValue" : "oldValue"
-              }, {
-                "key" : "key3",
-                "status" : "modified",
-                "oldValue" : "oldValue",
-                "newValue" : "newValue"
-              }, {
-                "key" : "key4",
-                "status" : "modified",
-                "oldValue" : [ "a", "b", "c" ],
-                "newValue" : [ "e", "f", "g" ]
-              }, {
-                "key" : "key5",
-                "status" : "unchanged",
-                "oldValue" : "sameValue",
-                "newValue" : "sameValue"
-              } ]
-            }""";
-
-    // Act
-    String result = Formatter.format(diffs, "json");
-
-    // Assert
-    assertEquals(expectedOutput, result);
+  static Stream<Arguments> provideFormats() {
+    return Stream.of(
+      Arguments.of("stylish", """
+              {
+                + key1: newValue
+                - key2: oldValue
+                - key3: oldValue
+                + key3: newValue
+                - key4: [a, b, c]
+                + key4: [e, f, g]
+                  key5: sameValue
+              }"""),
+      Arguments.of("plain", """
+              Property 'key1' was added with value: 'newValue'
+              Property 'key2' was removed
+              Property 'key3' was updated. From 'oldValue' to 'newValue'
+              Property 'key4' was updated. From [complex value] to [complex value]"""),
+      Arguments.of("json", """
+              {
+                "diffs" : [ {
+                  "key" : "key1",
+                  "status" : "added",
+                  "newValue" : "newValue"
+                }, {
+                  "key" : "key2",
+                  "status" : "removed",
+                  "oldValue" : "oldValue"
+                }, {
+                  "key" : "key3",
+                  "status" : "modified",
+                  "oldValue" : "oldValue",
+                  "newValue" : "newValue"
+                }, {
+                  "key" : "key4",
+                  "status" : "modified",
+                  "oldValue" : [ "a", "b", "c" ],
+                  "newValue" : [ "e", "f", "g" ]
+                }, {
+                  "key" : "key5",
+                  "status" : "unchanged",
+                  "oldValue" : "sameValue",
+                  "newValue" : "sameValue"
+                } ]
+              }""")
+    );
   }
 
   @Test
@@ -147,13 +133,13 @@ class FormatterTest {
   @Test
   void testFormatWithUnknownFormatThrowsException() {
     // Arrange
-    List<DiffEntry> diffs = List.of(
+    List<DiffEntry> invalidDiff = List.of(
             new DiffEntry("key1", null, "value1", DiffEntry.DiffStatus.ADDED)
     );
 
     // Act & Assert
     IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> Formatter.format(
-            diffs,
+            invalidDiff,
             "unknown"
     ));
     assertEquals("Unknown format: unknown", exception.getMessage());

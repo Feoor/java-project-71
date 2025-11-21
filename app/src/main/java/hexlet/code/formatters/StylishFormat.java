@@ -4,6 +4,9 @@ import hexlet.code.DiffEntry;
 import java.util.List;
 
 public class StylishFormat implements Format {
+  private StylishFormat() {
+    throw new IllegalStateException("Utility class");
+  }
 
   public static String format(List<DiffEntry> diff) {
     StringBuilder sb = new StringBuilder("{\n");

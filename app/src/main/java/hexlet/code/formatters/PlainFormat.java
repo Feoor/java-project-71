@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Map;
 
 public class PlainFormat implements Format {
+  private PlainFormat() {
+    throw new IllegalStateException("Utility class");
+  }
 
   public static String format(List<DiffEntry> diff) {
     StringBuilder sb = new StringBuilder();

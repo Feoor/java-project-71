@@ -8,6 +8,10 @@ import hexlet.code.DiffEntry;
 import java.util.List;
 
 public class JsonFormat implements Format {
+  private JsonFormat() {
+    throw new IllegalStateException("Utility class");
+  }
+
   public static String format(List<DiffEntry> diff) throws JsonProcessingException {
     ObjectMapper mapper = new ObjectMapper();
     ObjectNode jsonNodes = mapper.createObjectNode();
